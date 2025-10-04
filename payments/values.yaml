@@ -1,0 +1,70 @@
+# values.yaml for payments chart
+
+replicaCount: 2
+
+image:
+  repository: my-dockerhub-user/payments   # <-- replace with your image repo
+  tag: "1.0.0"                             # <-- replace with your image tag
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+#  runAsUser: 1000
+#  fsGroup: 2000
+
+securityContext: {}
+#  capabilities:
+#    drop:
+#    - ALL
+#  runAsNonRoot: true
+#  runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080   # <-- replace with your app container port
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: payments.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+  # - secretName: payments-tls
+  #   hosts:
+  #     - payments.example.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
